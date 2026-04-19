@@ -1,0 +1,213 @@
+<div class="container-fluid py-4">
+  <!-- Header Section -->
+  <div class="row mb-4">
+    <div class="col-lg-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h1 class="h3 mb-1">Gestion des Voitures</h1>
+          <p class="text-muted mb-0">Gérez votre flotte de véhicules</p>
+        </div>
+        <button class="btn btn-primary" (click)="openModal()">
+          <i class="fas fa-plus me-2"></i> Ajouter une voiture
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alert Messages -->
+  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="fas fa-exclamation-circle me-2"></i>{{ error }}
+    <button type="button" class="btn-close" (click)="error = ''" aria-label="Close"></button>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+
+  <!-- Table Section -->
+  <div *ngIf="!loading" class="row">
+    <div class="col-lg-12">
+      <div class="card shadow-sm">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th scope="col" class="py-3">Immatriculation</th>
+                <th scope="col" class="py-3">Modèle</th>
+                <th scope="col" class="py-3">Type</th>
+                <th scope="col" class="py-3">Kilométrage</th>
+                <th scope="col" class="py-3">Statut</th>
+                <th scope="col" class="py-3 text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let voiture of voitures">
+                <td class="py-3">
+                  <span class="badge bg-info text-dark">{{ voiture.immatriculation }}</span>
+                </td>
+                <td class="py-3">{{ voiture.modele }}</td>
+                <td class="py-3">{{ voiture.type }}</td>
+                <td class="py-3">
+                  <span class="text-muted">{{ voiture.kilometrage | number }}</span> km
+                </td>
+                <td class="py-3">
+                  <span
+                    class="badge"
+                    [ngClass]="{
+                      'bg-success': voiture.statut === 'actif' || voiture.statut === 'EN_SERVICE',
+                      'bg-warning': voiture.statut === 'en_maintenance' || voiture.statut === 'EN_MAINTENANCE',
+                      'bg-danger': voiture.statut === 'hors_service' || voiture.statut === 'HORS_SERVICE',
+                      'bg-secondary': !['actif', 'en_maintenance', 'hors_service', 'EN_SERVICE', 'EN_MAINTENANCE', 'HORS_SERVICE'].includes(voiture.statut)
+                    }">
+                    {{ voiture.statut }}
+                  </span>
+                </td>
+                <td class="py-3 text-end">
+                  <button
+                    class="btn btn-sm btn-outline-primary me-2"
+                    (click)="openModal(voiture)"
+                    title="Modifier">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-outline-danger"
+                    (click)="deleteVoiture(voiture.id)"
+                    title="Supprimer">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="voitures.length === 0">
+                <td colspan="6" class="text-center py-5 text-muted">
+                  <i class="fas fa-inbox fa-3x mb-3 d-block"></i>
+                  Aucune voiture trouvée
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Add/Edit -->
+  <div class="modal" [ngClass]="{ 'show': showModal, 'd-block': showModal }" [style]="{ backgroundColor: showModal ? 'rgba(0,0,0,0.5)' : '' }">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header border-bottom">
+          <h5 class="modal-title">
+            <i class="fas" [ngClass]="isEditMode ? 'fa-edit' : 'fa-plus'"></i>
+            {{ isEditMode ? 'Modifier une voiture' : 'Ajouter une voiture' }}
+          </h5>
+          <button type="button" class="btn-close" (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Form Error -->
+          <div *ngIf="error" class="alert alert-danger alert-sm mb-3">
+            {{ error }}
+          </div>
+
+          <form>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="immatriculation" class="form-label">Immatriculation <span class="text-danger">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="immatriculation"
+                  name="immatriculation"
+                  [(ngModel)]="formData.immatriculation"
+                  placeholder="Ex: AA-123-BB"
+                  [readonly]="isEditMode">
+              </div>
+              <div class="col-md-6">
+                <label for="modele" class="form-label">Modèle <span class="text-danger">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="modele"
+                  name="modele"
+                  [(ngModel)]="formData.modele"
+                  placeholder="Ex: Toyota Corolla">
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="type" class="form-label">Type <span class="text-danger">*</span></label>
+                <select class="form-select" id="type" name="type" [(ngModel)]="formData.type">
+                  <option value="">-- Sélectionnez un type --</option>
+                  <option value="berline">Berline</option>
+                  <option value="suv">SUV</option>
+                  <option value="monospace">Monospace</option>
+                  <option value="utilitaire">Utilitaire</option>
+                  <option value="autre">Autre</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="statut" class="form-label">Statut <span class="text-danger">*</span></label>
+                <select class="form-select" id="statut" name="statut" [(ngModel)]="formData.statut">
+                  <option value="">-- Sélectionnez un statut --</option>
+                  <option value="EN_SERVICE">En service</option>
+                  <option value="EN_MAINTENANCE">En maintenance</option>
+                  <option value="HORS_SERVICE">Hors service</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <label for="kilometrage" class="form-label">Kilométrage <span class="text-danger">*</span></label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="kilometrage"
+                  name="kilometrage"
+                  [(ngModel)]="formData.kilometrage"
+                  placeholder="Ex: 45000"
+                  min="0">
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <label for="image" class="form-label">Image du véhicule</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="image"
+                  accept="image/*"
+                  (change)="onImageSelected($event)">
+                <small class="text-muted d-block mt-2">
+                  <i class="fas fa-info-circle"></i> Format: JPG, PNG (optionnel)
+                </small>
+              </div>
+            </div>
+
+            <div *ngIf="formData.imageData" class="mb-3">
+              <label class="form-label">Aperçu de l'image</label>
+              <div class="border rounded p-2">
+                <img [src]="formData.imageData" alt="Aperçu" class="img-thumbnail" style="max-height: 150px;">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer border-top">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Annuler</button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="saveVoiture()"
+            [disabled]="loading">
+            <i class="fas fa-save me-2" *ngIf="!loading"></i>
+            <span class="spinner-border spinner-border-sm me-2" *ngIf="loading" role="status" aria-hidden="true"></span>
+            {{ isEditMode ? 'Mettre à jour' : 'Créer' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
