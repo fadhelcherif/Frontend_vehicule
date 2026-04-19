@@ -2,7 +2,7 @@ const initAppToggler = () => {
 
     const appTogglers = document.querySelectorAll(".app-toggler");
 	const appMenubars = document.getElementById("appMenubar"); // single element
-	
+
 	if (!appMenubars || appTogglers.length === 0) return;
 
 	appTogglers.forEach(toggler => {
@@ -40,10 +40,10 @@ const initAppToggler = () => {
 const saerchList = () => {
 	let listItems = [];
 
-	// JSON load
-	$.getJSON("assets/ajax/search.json", function(data) {
-		listItems = data.listItems;
-	});
+	// JSON load (disabled - file not needed)
+	// $.getJSON("assets/ajax/search.json", function(data) {
+	// 	listItems = data.listItems;
+	// });
 
 	// Search functionality
 	$("#searchInput").on("keyup", function() {
@@ -51,9 +51,9 @@ const saerchList = () => {
 		let searchContainer = $("#searchContainer");
 		searchContainer.empty();
 		searchContainer.hide();
-		
+
 		$('#recentlyResults').hide();
-		
+
 		if (query.length === 0) {
 			searchContainer.hide();
 			$('#recentlyResults').show();
@@ -119,17 +119,17 @@ const setElementHeight = () => {
 		const footerHeight = footer ? footer.offsetHeight : 0;
 		document.documentElement.style.setProperty('--footer-height', `${footerHeight}px`);
 	}
-	
+
 	const chatBox = document.querySelector('.chat-wrapper');
 	if (chatBox) {
 		const chatHeight = chatBox.offsetHeight;
 		document.documentElement.style.setProperty('--chat-height', `${chatHeight}px`);
 	}
-	
+
 };
 
 const initSelectPicker = () => {
-	
+
 	document.querySelectorAll('.select-status').forEach(dropdown => {
 		const toggleButton = dropdown.querySelector('.dropdown-toggle');
 		const items = dropdown.querySelectorAll('.dropdown-item');
@@ -211,29 +211,29 @@ function initSidebarMenu() {
 	try {
 		// Get the menubar container
 		const menubar = document.querySelector('.app-navbar .menubar');
-		
+
 		if (!menubar) {
 			console.warn('Menubar element not found');
 			return;
 		}
-		
+
 		// Use event delegation on the menubar
 		menubar.addEventListener('click', function(e) {
 			// Check if the clicked element or its parent is a menu-link
 			let menuLink = e.target.closest('.menu-link');
 			if (!menuLink) return;
-			
+
 			// Check if this link is in a menu-arrow item
 			const menuItem = menuLink.closest('.menu-item.menu-arrow');
 			if (!menuItem) return;
-			
+
 			e.preventDefault();
-			
+
 			const menuInner = menuItem.querySelector(':scope > .menu-inner');
 			if (!menuInner) return;
-			
+
 			const isOpen = menuItem.classList.contains('open');
-			
+
 			// Close all other menus at the same level
 			const parentList = menuItem.parentElement;
 			const siblingMenus = parentList.querySelectorAll(':scope > .menu-item.menu-arrow');
@@ -246,7 +246,7 @@ function initSidebarMenu() {
 					}
 				}
 			});
-			
+
 			// Toggle current menu - add class to BOTH menu-item and menu-link for CSS
 			if (isOpen) {
 				menuItem.classList.remove('open');
@@ -256,7 +256,7 @@ function initSidebarMenu() {
 				menuLink.classList.add('open');
 			}
 		});
-		
+
 	} catch (error) {
 		console.error('Error in initSidebarMenu:', error);
 	}
@@ -350,7 +350,7 @@ function initChatSidebarToggle() {
             sidebar.classList.remove('open');
             overlay.classList.remove('show');
         });
-		
+
 		btnClose.addEventListener('click', () => {
             sidebar.classList.remove('open');
             overlay.classList.remove('show');
@@ -489,7 +489,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	} catch (e) {
 		// Waves library not available, continue anyway
 	}
-	
+
     initAppToggler();
 	saerchList();
 	setElementHeight();
