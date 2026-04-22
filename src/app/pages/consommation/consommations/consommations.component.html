@@ -1,0 +1,157 @@
+<div class="container-fluid py-4">
+  <div class="row mb-4">
+    <div class="col-lg-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h1 class="h3 mb-1">Gestion des Consommations</h1>
+          <p class="text-muted mb-0">Suivez les depenses de carburant par vehicule</p>
+        </div>
+        <button class="btn btn-primary" (click)="openModal()">
+          <i class="fas fa-plus me-2"></i> Ajouter une consommation
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="fas fa-exclamation-circle me-2"></i>{{ error }}
+    <button type="button" class="btn-close" (click)="error = ''" aria-label="Close"></button>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!loading" class="row">
+    <div class="col-lg-12">
+      <div class="card shadow-sm">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th scope="col" class="py-3">Vehicule</th>
+                <th scope="col" class="py-3">Date</th>
+                <th scope="col" class="py-3">Quantite (L)</th>
+                <th scope="col" class="py-3">Cout Total</th>
+                <th scope="col" class="py-3 text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let consommation of consommations">
+                <td class="py-3">
+                  <span class="badge bg-info text-dark">{{ consommation.vehiculeImmatriculation }}</span>
+                </td>
+                <td class="py-3">{{ consommation.date | date : 'yyyy-MM-dd' }}</td>
+                <td class="py-3">{{ consommation.quantiteCarburant | number : '1.1-2' }} L</td>
+                <td class="py-3">{{ consommation.coutTotal | number : '1.2-2' }}</td>
+                <td class="py-3 text-end">
+                  <button
+                    class="btn btn-sm btn-outline-primary me-2"
+                    (click)="openModal(consommation)"
+                    title="Modifier">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-outline-danger"
+                    (click)="deleteConsommation(consommation.id)"
+                    title="Supprimer">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="consommations.length === 0">
+                <td colspan="5" class="text-center py-5 text-muted">
+                  <i class="fas fa-inbox fa-3x mb-3 d-block"></i>
+                  Aucune consommation trouvee
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" [ngClass]="{ 'show': showModal, 'd-block': showModal }" [style]="{ backgroundColor: showModal ? 'rgba(0,0,0,0.5)' : '' }">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header border-bottom">
+          <h5 class="modal-title">
+            <i class="fas" [ngClass]="isEditMode ? 'fa-edit' : 'fa-plus'"></i>
+            {{ isEditMode ? 'Modifier une consommation' : 'Ajouter une consommation' }}
+          </h5>
+          <button type="button" class="btn-close" (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="error" class="alert alert-danger alert-sm mb-3">
+            {{ error }}
+          </div>
+
+          <form>
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <label for="vehiculeId" class="form-label">Vehicule <span class="text-danger">*</span></label>
+                <select class="form-select" id="vehiculeId" name="vehiculeId" [(ngModel)]="formData.vehiculeId">
+                  <option [ngValue]="0">-- Selectionnez un vehicule --</option>
+                  <option *ngFor="let voiture of voitures" [ngValue]="voiture.id">
+                    {{ voiture.immatriculation }} - {{ voiture.modele }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <label for="date" class="form-label">Date <span class="text-danger">*</span></label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="date"
+                  name="date"
+                  [(ngModel)]="formData.date">
+              </div>
+              <div class="col-md-4">
+                <label for="quantiteCarburant" class="form-label">Quantite carburant (L) <span class="text-danger">*</span></label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="quantiteCarburant"
+                  name="quantiteCarburant"
+                  [(ngModel)]="formData.quantiteCarburant"
+                  min="0"
+                  step="0.01"
+                  placeholder="Ex: 42.50">
+              </div>
+              <div class="col-md-4">
+                <label for="coutTotal" class="form-label">Cout total <span class="text-danger">*</span></label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="coutTotal"
+                  name="coutTotal"
+                  [(ngModel)]="formData.coutTotal"
+                  min="0"
+                  step="0.01"
+                  placeholder="Ex: 310.00">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer border-top">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Annuler</button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="saveConsommation()"
+            [disabled]="loading">
+            <i class="fas fa-save me-2" *ngIf="!loading"></i>
+            <span class="spinner-border spinner-border-sm me-2" *ngIf="loading" role="status" aria-hidden="true"></span>
+            {{ isEditMode ? 'Mettre a jour' : 'Creer' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
