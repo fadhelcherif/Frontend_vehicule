@@ -19,6 +19,13 @@
   --custom-modal-backdrop-bg: #a6adbf;
 }
 
+/* Vehicle / Person thumbnail used across lists */
+.vehicle-thumb {
+  max-height: 60px;
+  width: auto;
+  object-fit: cover;
+}
+
 :root {
   --custom-body-bg: #fdfdfd;
   --app-sidebar-bg: var(--bs-body-bg);

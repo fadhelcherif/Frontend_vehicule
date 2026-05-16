@@ -1,0 +1,54 @@
+/* Card Styling */
+.card {
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.card:hover {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.table {
+  font-size: 0.875rem;
+}
+
+.table thead th {
+  font-weight: 600;
+  color: #5a6c7d;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #e7f0f7;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #e7f0f7;
+  transition: background-color 0.2s ease;
+}
+
+.table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.badge {
+  padding: 0.4rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.alert {
+  border: none;
+  border-radius: 0.4rem;
+  border-left: 4px solid #dc3545;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  border-left-color: #dc3545;
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}

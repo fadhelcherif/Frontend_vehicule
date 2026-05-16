@@ -150,3 +150,10 @@
     font-size: 0.65rem;
   }
 }
+
+/* Vehicle image thumbnail */
+.vehicle-thumb {
+  max-height: 60px;
+  width: auto;
+  object-fit: cover;
+}

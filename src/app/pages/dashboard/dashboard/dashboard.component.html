@@ -1,0 +1,116 @@
+<div class="container-fluid py-4">
+  <div class="row mb-4">
+    <div class="col-lg-12">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+          <h1 class="h3 mb-1">Dashboard Flotte</h1>
+          <p class="text-muted mb-0">Cout carburant et vehicules les plus actifs</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <label for="limit" class="mb-0 text-muted">Top actifs</label>
+          <input
+            id="limit"
+            type="number"
+            class="form-control"
+            style="width: 120px"
+            min="1"
+            [(ngModel)]="limit"
+            placeholder="Limit">
+          <button class="btn btn-primary" (click)="applyLimit()">Appliquer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="fas fa-exclamation-circle me-2"></i>{{ error }}
+    <button type="button" class="btn-close" (click)="error = ''" aria-label="Close"></button>
+  </div>
+
+  <div class="row mb-4" *ngIf="!loading">
+    <div class="col-lg-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h6 class="text-muted mb-2">Cout Carburant Total</h6>
+          <h3 class="mb-0">{{ totalFuelCost | number : '1.2-2' }}</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!loading" class="row">
+    <div class="col-lg-12">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white border-bottom">
+          <h6 class="mb-0">Cout Carburant Par Vehicule</h6>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th class="py-3">Vehicule</th>
+                <th class="py-3">Cout Total Carburant</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of fuelCosts">
+                <td class="py-3">
+                  <span class="badge bg-info text-dark">{{ row.immatriculation }}</span>
+                </td>
+                <td class="py-3">{{ row.coutTotalCarburant | number : '1.2-2' }}</td>
+              </tr>
+              <tr *ngIf="fuelCosts.length === 0">
+                <td colspan="2" class="text-center py-5 text-muted">
+                  <i class="fas fa-inbox fa-3x mb-3 d-block"></i>
+                  Aucune donnee carburant
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading" class="row mt-4">
+    <div class="col-lg-12">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white border-bottom">
+          <h6 class="mb-0">Vehicules Les Plus Actifs</h6>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th class="py-3">Vehicule</th>
+                <th class="py-3">Nombre de Missions</th>
+                <th class="py-3">Distance Totale (km)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of mostActiveVehicules">
+                <td class="py-3">
+                  <span class="badge bg-info text-dark">{{ item.immatriculation || '-' }}</span>
+                </td>
+                <td class="py-3">{{ getMissionCount(item) }}</td>
+                <td class="py-3">{{ getTotalDistance(item) | number : '1.1-2' }}</td>
+              </tr>
+              <tr *ngIf="mostActiveVehicules.length === 0">
+                <td colspan="3" class="text-center py-5 text-muted">
+                  <i class="fas fa-inbox fa-3x mb-3 d-block"></i>
+                  Aucune donnee d'activite
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

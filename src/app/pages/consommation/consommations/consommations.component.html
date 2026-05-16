@@ -41,7 +41,7 @@
             <tbody>
               <tr *ngFor="let consommation of consommations">
                 <td class="py-3">
-                  <span class="badge bg-info text-dark">{{ consommation.vehiculeImmatriculation }}</span>
+                  <span class="badge bg-info text-dark">{{ getVehiculeImmatriculation(consommation.vehiculeId) }}</span>
                 </td>
                 <td class="py-3">{{ consommation.date | date : 'yyyy-MM-dd' }}</td>
                 <td class="py-3">{{ consommation.quantiteCarburant | number : '1.1-2' }} L</td>
