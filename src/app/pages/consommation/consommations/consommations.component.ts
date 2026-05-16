@@ -67,6 +67,11 @@ export class ConsommationsComponent implements OnInit {
     });
   }
 
+  getVehiculeImmatriculation(vehiculeId: number): string {
+    const v = this.voitures.find((x) => x.id === vehiculeId);
+    return v ? v.immatriculation : '—';
+  }
+
   openModal(consommation?: Consommation): void {
     this.showModal = true;
     this.error = '';

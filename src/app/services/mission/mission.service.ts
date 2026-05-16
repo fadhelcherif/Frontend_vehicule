@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Mission, MissionRequest } from '../../models/mission/mission.model';
 
 export interface AffectationRequest {
@@ -17,23 +18,28 @@ export class MissionService {
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<Mission[]> {
-    return this.http.get<Mission[]>(this.apiUrl);
+    return this.http.get<{ success: boolean; data: Mission[] }>(this.apiUrl)
+      .pipe(map(response => response.data));
   }
 
   getById(id: number): Observable<Mission> {
-    return this.http.get<Mission>(`${this.apiUrl}/${id}`);
+    return this.http.get<{ success: boolean; data: Mission }>(`${this.apiUrl}/${id}`)
+      .pipe(map(response => response.data));
   }
 
   create(request: MissionRequest): Observable<Mission> {
-    return this.http.post<Mission>(this.apiUrl, request);
+    return this.http.post<{ success: boolean; data: Mission }>(this.apiUrl, request)
+      .pipe(map(response => response.data));
   }
 
   update(id: number, request: MissionRequest): Observable<Mission> {
-    return this.http.put<Mission>(`${this.apiUrl}/${id}`, request);
+    return this.http.put<{ success: boolean; data: Mission }>(`${this.apiUrl}/${id}`, request)
+      .pipe(map(response => response.data));
   }
 
   updateAffectation(missionId: number, request: AffectationRequest): Observable<Mission> {
-    return this.http.put<Mission>(`${this.apiUrl}/${missionId}/affectation`, request);
+    return this.http.put<{ success: boolean; data: Mission }>(`${this.apiUrl}/${missionId}/affectation`, request)
+      .pipe(map(response => response.data));
   }
 
   delete(id: number): Observable<void> {

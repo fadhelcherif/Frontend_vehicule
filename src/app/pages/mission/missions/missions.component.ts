@@ -85,6 +85,16 @@ export class MissionsComponent implements OnInit {
     });
   }
 
+  getVehiculeImmatriculation(vehiculeId: number): string {
+    const v = this.voitures.find((x) => x.id === vehiculeId);
+    return v ? v.immatriculation : '—';
+  }
+
+  getChauffeurNom(chauffeurId: number): string {
+    const c = this.chauffeurs.find((x) => x.id === chauffeurId);
+    return c ? c.nom : '—';
+  }
+
   openModal(mission?: Mission): void {
     this.showModal = true;
     this.error = '';

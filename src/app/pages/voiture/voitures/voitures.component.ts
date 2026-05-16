@@ -277,4 +277,24 @@ export class VoituresComponent implements OnInit {
       reader.readAsDataURL(file);
     }
   }
+
+  imageSrc(data?: string): string {
+    const fallback = 'assets/images/download.png';
+    if (!data) return fallback;
+    if (data.startsWith('data:')) return data;
+    // If it's raw base64 without data URL, assume PNG
+    if (/^[A-Za-z0-9+/=\r\n]+$/.test(data)) {
+      return `data:image/png;base64,${data}`;
+    }
+    // Otherwise treat as URL
+    return data;
+  }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (img && img.src) {
+      img.src = 'assets/images/download.png';
+      img.onerror = null;
+    }
+  }
 }

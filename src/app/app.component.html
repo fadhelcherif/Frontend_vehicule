@@ -39,14 +39,8 @@
 <!-- begin::GXON Sidebar Menu -->
 		<aside class="app-menubar" id="appMenubar">
 			<div class="app-navbar-brand">
-				<a class="navbar-brand-logo" href="index.html">
-					<img src="../assets/images/logo.svg" alt="GXON Admin Dashboard Logo">
-				</a>
-				<a class="navbar-brand-mini visible-light" href="index.html">
-					<img src="../assets/images/logo-text.svg" alt="GXON Admin Dashboard Logo">
-				</a>
 				<a class="navbar-brand-mini visible-dark" href="index.html">
-					<img src="../assets/images/logo-text-white.svg" alt="GXON Admin Dashboard Logo">
+					<img src="assets/images/download.png" alt="Voiture Flot Logo">
 				</a>
 			</div>
 			<nav class="app-navbar" data-simplebar>
@@ -54,8 +48,8 @@
           <li class="menu-heading">
 						<span class="menu-label">Stats</span>
 					</li>
-					<li class="menu-item menu-arrow">
-						<a class="menu-link" href="javascript:void(0);" role="button">
+					<li class="menu-item">
+						<a class="menu-link" [routerLink]="'/dashboard'" role="button">
 							<i class="fi fi-rr-apps"></i>
 							<span class="menu-label">Dashboard</span>
 						</a>
@@ -64,25 +58,25 @@
 						<span class="menu-label">Gestion</span>
 					</li>
 					<li class="menu-item">
-						<a class="menu-link" href="/chauffeurs">
+						<a class="menu-link" [routerLink]="'/chauffeurs'">
 							<i class="fi fi-rr-users"></i>
 							<span class="menu-label">Chauffeurs</span>
 						</a>
 					</li>
           <li class="menu-item">
-						<a class="menu-link" href="/missions">
+						<a class="menu-link" [routerLink]="'/missions'">
 							<i class="fi fi-rr-users"></i>
 							<span class="menu-label">Missions</span>
 						</a>
 					</li>
           <li class="menu-item">
-						<a class="menu-link" href="/voitures">
+						<a class="menu-link" [routerLink]="'/voitures'">
 							<i class="fi fi-rr-users"></i>
 							<span class="menu-label">Voiture</span>
 						</a>
 					</li>
 					<li class="menu-item">
-						<a class="menu-link" href="/consommations">
+						<a class="menu-link" [routerLink]="'/consommations'">
 							<i class="fi fi-rr-chart-line-up"></i>
 							<span class="menu-label">Consommations</span>
 						</a>

@@ -42,9 +42,9 @@
             <tbody>
               <tr *ngFor="let mission of missions">
                 <td class="py-3">
-                  <span class="badge bg-info text-dark">{{ mission.vehiculeImmatriculation }}</span>
+                  <span class="badge bg-info text-dark">{{ getVehiculeImmatriculation(mission.vehiculeId) }}</span>
                 </td>
-                <td class="py-3">{{ mission.chauffeurNom }}</td>
+                <td class="py-3">{{ getChauffeurNom(mission.chauffeurId) }}</td>
                 <td class="py-3">{{ mission.pointDepart }}</td>
                 <td class="py-3">{{ mission.destination }}</td>
                 <td class="py-3">{{ mission.distance | number : '1.1-2' }}</td>

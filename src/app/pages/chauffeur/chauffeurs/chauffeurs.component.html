@@ -31,6 +31,7 @@
           <table class="table table-hover mb-0">
             <thead class="table-light">
               <tr>
+                <th scope="col" class="py-3">Image</th>
                 <th scope="col" class="py-3">Nom</th>
                 <th scope="col" class="py-3">Permis</th>
                 <th scope="col" class="py-3">Experience</th>
@@ -39,6 +40,13 @@
             </thead>
             <tbody>
               <tr *ngFor="let chauffeur of chauffeurs">
+                <td class="py-3">
+                  <img
+                    [src]="imageSrc(chauffeur.imageData)"
+                    alt="Chauffeur"
+                    class="img-thumbnail vehicle-thumb"
+                    (error)="onImageError($event)" />
+                </td>
                 <td class="py-3">{{ chauffeur.nom }}</td>
                 <td class="py-3">
                   <span class="badge bg-info text-dark">{{ chauffeur.permis }}</span>
@@ -62,7 +70,7 @@
                 </td>
               </tr>
               <tr *ngIf="chauffeurs.length === 0">
-                <td colspan="4" class="text-center py-5 text-muted">
+                <td colspan="5" class="text-center py-5 text-muted">
                   <i class="fas fa-inbox fa-3x mb-3 d-block"></i>
                   Aucun chauffeur trouve
                 </td>
