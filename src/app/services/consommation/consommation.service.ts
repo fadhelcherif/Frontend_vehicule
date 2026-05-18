@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Consommation, ConsommationRequest } from '../../models/consommation/consommation.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConsommationService {
-  private apiUrl = '/api/consommations';
+  private apiUrl = environment.apiUrl + '/api/consommations';
 
   constructor(private http: HttpClient) {}
 

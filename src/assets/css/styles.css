@@ -26,6 +26,14 @@
   object-fit: cover;
 }
 
+/* App logo styling */
+.app-logo {
+  max-height: 42px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
 :root {
   --custom-body-bg: #fdfdfd;
   --app-sidebar-bg: var(--bs-body-bg);
