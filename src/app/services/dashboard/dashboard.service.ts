@@ -3,12 +3,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FuelCostByVehiculeResponse, VehiculeActivityResponse } from '../../models/dashboard/dashboard.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DashboardService {
-  private apiUrl = '/api/dashboard';
+  private apiUrl = environment.apiUrl + '/api/dashboard';
 
   constructor(private http: HttpClient) {}
 

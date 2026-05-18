@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DashboardService } from '../../../services/dashboard/dashboard.service';
+import { MissionService } from '../../../services/mission/mission.service';
+import { Subscription } from 'rxjs';
+import { VoitureService } from '../../../services/voiture/voiture.service';
+import { Voiture } from '../../../models/voiture/voiture.model';
 import { FuelCostByVehiculeResponse, VehiculeActivityResponse } from '../../../models/dashboard/dashboard.model';
 
 @Component({
@@ -11,17 +15,37 @@ import { FuelCostByVehiculeResponse, VehiculeActivityResponse } from '../../../m
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   fuelCosts: FuelCostByVehiculeResponse[] = [];
   mostActiveVehicules: VehiculeActivityResponse[] = [];
+  voitures: Voiture[] = [];
   limit = 5;
   loading = false;
   error = '';
+  private subscriptions: Subscription = new Subscription();
 
-  constructor(private dashboardService: DashboardService) {}
+  constructor(
+    private dashboardService: DashboardService,
+    private voitureService: VoitureService,
+    private missionService: MissionService
+  ) {}
 
   ngOnInit(): void {
     this.loadDashboardData();
+    // Reload dashboard when missions change
+    this.subscriptions.add(
+      this.missionService.missionsChanged$.subscribe(() => {
+        this.loadDashboardData();
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  private loadVoitures(): void {
+    this.dashboardService && null; // noop to keep linter calm if unused
   }
 
   loadDashboardData(): void {
@@ -59,6 +83,43 @@ export class DashboardComponent implements OnInit {
         complete();
       }
     });
+
+    // Load voitures to map images if available
+    this.voitureService.getAll().subscribe({
+      next: (data) => {
+        this.voitures = data;
+      },
+      error: (err) => {
+        console.error('Error loading voitures for dashboard images:', err);
+      }
+    });
+  }
+
+  imageSrc(data?: string): string {
+    const fallback = 'assets/images/download.png';
+    if (!data) return fallback;
+    if (data.startsWith('data:')) return data;
+    if (/^[A-Za-z0-9+/=\r\n]+$/.test(data)) {
+      return `data:image/png;base64,${data}`;
+    }
+    return data;
+  }
+
+  getVehicleImage(item: VehiculeActivityResponse): string {
+    const id = Number(item.vehiculeId ?? item.vehiculeId);
+    let v = this.voitures.find((x) => x.id === id);
+    if (!v && item.immatriculation) {
+      v = this.voitures.find((x) => x.immatriculation === item.immatriculation);
+    }
+    return v ? this.imageSrc(v.imageData) : 'assets/images/download.png';
+  }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (img && img.src) {
+      img.src = 'assets/images/download.png';
+      img.onerror = null;
+    }
   }
 
   get totalFuelCost(): number {
