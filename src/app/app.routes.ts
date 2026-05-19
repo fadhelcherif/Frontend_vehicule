@@ -4,6 +4,7 @@ import { ChauffeursComponent } from './pages/chauffeur/chauffeurs/chauffeurs.com
 import { MissionsComponent } from './pages/mission/missions/missions.component';
 import { ConsommationsComponent } from './pages/consommation/consommations/consommations.component';
 import { DashboardComponent } from './pages/dashboard/dashboard/dashboard.component';
+import { MaintenanceAlertsComponent } from './pages/reporting/maintenance-alerts/maintenance-alerts.component';
 
 export const routes: Routes = [
   {
@@ -30,5 +31,10 @@ export const routes: Routes = [
   {
     path: 'voitures',
     component: VoituresComponent
+  }
+  ,
+  {
+    path: 'reporting/maintenance-alerts',
+    component: MaintenanceAlertsComponent
   }
 ];

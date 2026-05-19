@@ -5,6 +5,7 @@ import { DashboardService } from '../../../services/dashboard/dashboard.service'
 import { MissionService } from '../../../services/mission/mission.service';
 import { Subscription } from 'rxjs';
 import { VoitureService } from '../../../services/voiture/voiture.service';
+import { Router } from '@angular/router';
 import { Voiture } from '../../../models/voiture/voiture.model';
 import { FuelCostByVehiculeResponse, VehiculeActivityResponse } from '../../../models/dashboard/dashboard.model';
 
@@ -27,8 +28,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
   constructor(
     private dashboardService: DashboardService,
     private voitureService: VoitureService,
-    private missionService: MissionService
+    private missionService: MissionService,
+    private router: Router
   ) {}
+
+  goToMaintenanceAlerts(): void {
+    // Navigate to the reporting maintenance alerts page
+    // Router is injected in the constructor if available
+    // Use history navigation via window as fallback
+    try {
+      this.router.navigate(['reporting/maintenance-alerts']);
+    } catch (e) {
+      window.location.href = '/reporting/maintenance-alerts';
+    }
+  }
 
   ngOnInit(): void {
     this.loadDashboardData();

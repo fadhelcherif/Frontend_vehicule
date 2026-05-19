@@ -18,11 +18,14 @@ export interface VoitureRequest {
 }
 
 export interface MaintenanceAlert {
-  id: number;
+  vehiculeId: number;
+  // legacy id alias (optional)
+  id?: number;
   immatriculation: string;
   modele: string;
   kilometrage: number;
-  seuil: number;
-  km_depassement: number;
+  // matches backend field names
+  seuilKm: number;
+  depassementKm: number;
   statut: string;
 }
